@@ -40,7 +40,12 @@ export class StudentRepository implements IStudentRepository {
         try {
             await prisma.student.create({
                 data:{
-                    ...data
+                  name:data.name,
+                  email:data.email,
+                  course:data.course,
+                  password:data.password,
+                  registration:data.registration,
+                  phoneNumber:data.phoneNumber
                 }
             })
             return await new ResponseModel("Student registered successfully.", false, null)    
