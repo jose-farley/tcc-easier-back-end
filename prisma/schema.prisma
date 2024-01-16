@@ -17,6 +17,7 @@ model student {
   course       String
   phoneNumber  String?
   registration String   @unique
+  role          String
 }
 
 model professor {
@@ -26,4 +27,5 @@ model professor {
   password     String
   createdAt    DateTime @default(now())
   cpf         String
+  role        String
 }

@@ -45,7 +45,8 @@ export class StudentRepository implements IStudentRepository {
                   course:data.course,
                   password:data.password,
                   registration:data.registration,
-                  phoneNumber:data.phoneNumber
+                  phoneNumber:data.phoneNumber,
+                  role:"student"
                 }
             })
             return await new ResponseModel("Student registered successfully.", false, null)    

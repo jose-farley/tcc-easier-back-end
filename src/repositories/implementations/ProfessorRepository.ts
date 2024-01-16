@@ -11,7 +11,8 @@ export class ProfessorRepository implements IProfessorRepository {
                 name:data.name,
                 email: data.email,
                 cpf:data.cpf,
-                password:data.password
+                password:data.password,
+                role:"professor"
                }
             })
             return new ResponseModel("Professor cadastrado!", false)
