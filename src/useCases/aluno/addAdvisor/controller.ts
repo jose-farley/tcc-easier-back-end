@@ -1,9 +1,9 @@
-import { AddAlunoUserCase } from "./useCase";
+import { AddAdvisorUseCase } from "./useCase";
 import { Request, Response } from "express";
 
-export class AddStudentController {
+export class AddAdvisorController {
 
-    constructor(private useCase:AddAlunoUserCase){}
+    constructor(private useCase:AddAdvisorUseCase){}
 
     async handle(request:Request, response:Response){
         const result = await this.useCase.execute(request.body);

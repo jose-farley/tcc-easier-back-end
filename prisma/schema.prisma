@@ -18,6 +18,11 @@ model student {
   phoneNumber  String?
   registration String   @unique
   role          String
+  advisorId     String?
+  theme         String?
+  description   String?
+  advisor       professor?   @relation(fields: [advisorId], references: [id])
+  invites       studentInvite[]
 }
 
 model professor {
@@ -28,4 +33,17 @@ model professor {
   createdAt    DateTime @default(now())
   cpf         String
   role        String
+  mentees     student[]
+  studentInvites  studentInvite[]
+}
+
+model studentInvite {
+  id             String   @id @default(uuid())
+  professorName  String
+  mensagem       String?
+  createdAt      DateTime @default(now())
+  studentId      String
+  student        student  @relation(fields: [studentId], references: [id])
+  advisorId      String 
+  advisor        professor  @relation(fields: [advisorId], references: [id])
 }

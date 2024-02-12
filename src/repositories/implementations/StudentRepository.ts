@@ -1,9 +1,33 @@
 import { prisma } from "../../database";
+import { AddinviteStudent } from "../../useCases/aluno/AddInvite/dto";
 import { AddAlunoDTO, AddStudent } from "../../useCases/aluno/add/dto";
+import { AddAdvisor } from "../../useCases/aluno/addAdvisor/dto";
 import { ResponseModel } from "../../util/ResponseModel";
 import { IStudentRepository } from "../interfaces/IStudentRepository";
 
 export class StudentRepository implements IStudentRepository {
+    async addAdvisor(data:any): Promise<ResponseModel> {
+        try {
+            const result = await prisma.student.update({
+                where:{id:data.data.studentId},
+                data:{
+                    advisorId:data.data.advisorId
+                }
+            })
+            return await new ResponseModel("Orientador adicionado com sucesso.", false, null) 
+       } catch (error) {
+        return await new ResponseModel("Houve um problema ao adicionar o orientador", true, error.message)   
+
+       }
+    }
+    async removeInvite(id: string): Promise<ResponseModel> {
+        try {
+            await prisma.studentInvite.delete({where:{id:id}});
+            return await new ResponseModel("Convite removido com sucesso.", false, null);
+        } catch (error) {
+            return await new ResponseModel("Houve um problema removendo o convite.", true, error.message);
+        }
+    }
     async update(data: { id: string; name: string; email: string; password: string; registration: string; course: string; phoneNumber?: string | undefined; }): Promise<ResponseModel> {
        try {
             const result = await prisma.student.update({
@@ -28,7 +52,11 @@ export class StudentRepository implements IStudentRepository {
                     course:true,
                     phoneNumber:true,
                     registration:true,
-                    createdAt:true
+                    theme:true,
+                    description:true,
+                    createdAt:true,
+                    advisorId:true,
+                    invites:true
                 }
             })
             return await new ResponseModel(result, false, null)
@@ -46,7 +74,10 @@ export class StudentRepository implements IStudentRepository {
                   password:data.password,
                   registration:data.registration,
                   phoneNumber:data.phoneNumber,
-                  role:"student"
+                  role:"student",
+                  description:"Não informada",
+                  theme:"Não informado",
+                  
                 }
             })
             return await new ResponseModel("Student registered successfully.", false, null)    
@@ -60,6 +91,27 @@ export class StudentRepository implements IStudentRepository {
             return await new ResponseModel("Student removed successfully.", false, null);
         } catch (error) {
             return await new ResponseModel("There was a problem removing the student.", true, error.message);
+        }
+    }
+    async addInvite(data:AddinviteStudent){
+        try {
+
+            let professor = await prisma.professor.findUnique({
+                where:{
+                    id:data.advisorId
+                }
+            })
+            await prisma.studentInvite.create({
+                data:{
+                    professorName:professor!.name,
+                    advisorId:data.advisorId,
+                    mensagem:data.message,
+                    studentId:data.studentId
+                }
+            })
+            return new ResponseModel("Convite enviado!", false)
+        } catch (error) {
+            return new ResponseModel("Houve um erro ao enviar o convite.", true)
         }
     }
 
