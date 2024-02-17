@@ -14,6 +14,11 @@ export class StudentRepository implements IStudentRepository {
                     advisorId:data.data.advisorId
                 }
             })
+            await prisma.studentInvite.deleteMany({
+                where:{
+                    studentId:data.data.studentId
+                }
+            })
             return await new ResponseModel("Orientador adicionado com sucesso.", false, null) 
        } catch (error) {
         return await new ResponseModel("Houve um problema ao adicionar o orientador", true, error.message)   

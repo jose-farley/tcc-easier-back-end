@@ -23,6 +23,7 @@ model student {
   description   String?
   advisor       professor?   @relation(fields: [advisorId], references: [id])
   invites       studentInvite[]
+  professorInvites professorInvites[]
 }
 
 model professor {
@@ -35,11 +36,22 @@ model professor {
   role        String
   mentees     student[]
   studentInvites  studentInvite[]
+  professorInvites  professorInvites[]
 }
 
 model studentInvite {
   id             String   @id @default(uuid())
   professorName  String
+  mensagem       String?
+  createdAt      DateTime @default(now())
+  studentId      String
+  student        student  @relation(fields: [studentId], references: [id])
+  advisorId      String 
+  advisor        professor  @relation(fields: [advisorId], references: [id])
+}
+model professorInvites {
+  id             String   @id @default(uuid())
+  studentName    String
   mensagem       String?
   createdAt      DateTime @default(now())
   studentId      String
